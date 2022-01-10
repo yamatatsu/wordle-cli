@@ -3,9 +3,13 @@ import getWords from "./lib/get_words.ts";
 import startGame from "./lib/wordle_game.ts";
 import Solver from "./lib/solver.ts";
 
+const trialNum = /\d+/.test(Deno.args[0]) ? Number(Deno.args[0]) : 10;
+
+console.info(`Try ${trialNum}!`);
+
 const words = await getWords();
 
-const turns = range(10).map(() => {
+const turns = range(trialNum).map(() => {
   const solver = new Solver(words);
   return startGame(words, solver);
 }).sort();
