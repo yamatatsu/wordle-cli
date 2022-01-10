@@ -12,7 +12,7 @@ const words = await getWords();
 const turns = range(trialNum).map(() => {
   const solver = new Solver(words);
   return startGame(words, solver);
-}).sort();
+}).sort((a, b) => a > b ? 1 : -1);
 
 console.info("min:", min(turns));
 console.info("max:", max(turns));

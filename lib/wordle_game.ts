@@ -36,7 +36,7 @@ export default function startGame(words: readonly string[], solver: Solver) {
     assistant.getEstimatedResults(result.result);
 
     if (result.type === "solved") {
-      console.info("congrats!!");
+      console.info("congrats!! turn:", turn);
       return turn;
     } else {
       // console.info("Hint:", assistant.sayHint());
