@@ -34,6 +34,11 @@ function startGame(words: readonly string[], solver: Solver) {
 
     const result = questioner.judge(input);
 
+    if (result.type === "unsolved") {
+      solver.addFeed(result.result);
+      continue;
+    }
+
     if (result.type === "solved") {
       console.info("congrats!! turn:", turn);
       return turn;
