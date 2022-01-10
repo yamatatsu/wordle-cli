@@ -12,28 +12,34 @@ type Solver = {
   response: () => string | undefined;
 };
 
-export default function startGame(words: string[], solver: Solver) {
+export default function startGame(words: readonly string[], solver: Solver) {
   const questioner = new Questioner(words);
   const assistant = new Assistant();
 
+  let turn = 0;
+
   while (true) {
+    turn++;
     const input = solver.response();
 
     const result = questioner.judge(input);
 
     if (result.type === "invalid") {
       console.info(result.message);
+      if (result.message === "empty!") {
+        return Infinity.valueOf();
+      }
       continue;
     }
 
-    console.info(color(result.result));
+    // console.info(color(result.result));
     assistant.getEstimatedResults(result.result);
 
     if (result.type === "solved") {
       console.info("congrats!!");
-      break;
+      return turn;
     } else {
-      console.info("Hint:", assistant.sayHint());
+      // console.info("Hint:", assistant.sayHint());
     }
   }
 }
