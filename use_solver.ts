@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read=./words.txt
 import getWords from "./lib/get_words.ts";
-import startGame from "./lib/wordle_game.ts";
 import Solver from "./lib/solver.ts";
+import Questioner from "./lib/questioner.ts";
 
 const trialNum = /\d+/.test(Deno.args[0]) ? Number(Deno.args[0]) : 10;
 
@@ -9,15 +9,37 @@ console.info(`Try ${trialNum}!`);
 
 const words = await getWords();
 
+// Game Start
 const turns = range(trialNum).map(() => {
   const solver = new Solver(words);
   return startGame(words, solver);
 }).sort((a, b) => a > b ? 1 : -1);
 
+// Results
 console.info("min:", min(turns));
 console.info("max:", max(turns));
 console.info("mean:", mean(turns));
 console.info("median:", median(turns));
+
+/////////////////
+
+function startGame(words: readonly string[], solver: Solver) {
+  const questioner = new Questioner(words);
+
+  let turn = 0;
+
+  while (true) {
+    turn++;
+    const input = solver.response();
+
+    const result = questioner.judge(input);
+
+    if (result.type === "solved") {
+      console.info("congrats!! turn:", turn);
+      return turn;
+    }
+  }
+}
 
 function range(len: number) {
   return [...Array(len).keys()];
