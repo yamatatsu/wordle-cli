@@ -4,7 +4,7 @@ import startGame from "./lib/wordle_game.ts";
 const words = await getWords();
 
 const solver = {
-  solve: () => prompt("Please enter input")?.toLowerCase(),
+  response: () => prompt("Please enter input")?.toLowerCase(),
 };
 
 startGame(words, solver);

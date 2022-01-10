@@ -9,7 +9,7 @@ type EstimatedResult = {
 };
 
 type Solver = {
-  solve: () => string | undefined;
+  response: () => string | undefined;
 };
 
 export default function startGame(words: string[], solver: Solver) {
@@ -17,8 +17,7 @@ export default function startGame(words: string[], solver: Solver) {
   const assistant = new Assistant();
 
   while (true) {
-    // const input = prompt("Please enter input")?.toLowerCase();
-    const input = solver.solve();
+    const input = solver.response();
 
     const result = questioner.judge(input);
 
