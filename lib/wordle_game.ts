@@ -47,7 +47,7 @@ export default function startGame(words: readonly string[], solver: Solver) {
 function color(estimatedResults: EstimatedResult[]): string {
   return estimatedResults.map(({ char, containing, same }) => {
     if (same) {
-      return Color.exactly(char);
+      return Color.exact(char);
     }
     if (containing) {
       return Color.containing(char);

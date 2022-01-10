@@ -4,7 +4,7 @@ import { EstimatedResult } from "./questioner.ts";
 const alphabets = "qwertyuiopasdfghjklzxcvbnm".split("");
 type AlphabetsStatus = Record<
   string,
-  { type: "not_yet" | "not_containing" | "containing" | "exactly" }
+  { type: "not_yet" | "not_containing" | "containing" | "exact" }
 >;
 
 export default class Assistant {
@@ -17,11 +17,11 @@ export default class Assistant {
   getEstimatedResults(estimatedResults: EstimatedResult[]) {
     estimatedResults.forEach((res) => {
       const status = this.alphabetsStatus[res.char];
-      if (status.type === "exactly") {
+      if (status.type === "exact") {
         return;
       }
-      if (res.same) {
-        status.type = "exactly";
+      if (res.exact) {
+        status.type = "exact";
         return;
       }
       if (status.type === "containing") {
@@ -37,8 +37,8 @@ export default class Assistant {
   sayHint() {
     return Object.entries(this.alphabetsStatus).map(([alphabet, { type }]) => {
       switch (type) {
-        case "exactly":
-          return Color.exactly(alphabet);
+        case "exact":
+          return Color.exact(alphabet);
         case "containing":
           return Color.containing(alphabet);
         case "not_containing":

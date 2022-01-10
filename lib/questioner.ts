@@ -1,7 +1,7 @@
 export type EstimatedResult = {
   char: string;
   containing: boolean;
-  same: boolean;
+  exact: boolean;
 };
 
 type JudgeResult =
@@ -49,14 +49,14 @@ export default class Questioner {
   private estimate(input: string): EstimatedResult[] {
     return input.split("").map((c, i): EstimatedResult => {
       const containing = this.answer.includes(c);
-      const same = c === this.answer.charAt(i);
-      return { char: c, containing, same };
+      const exact = c === this.answer.charAt(i);
+      return { char: c, containing, exact };
     });
   }
 }
 
 function isSolved(estimatedResult: EstimatedResult[]): boolean {
-  return estimatedResult.every(({ same }) => same);
+  return estimatedResult.every(({ exact }) => exact);
 }
 
 function selectRandomly<T>(list: readonly T[]): T {
