@@ -1,5 +1,6 @@
 #!/usr/bin/env -S deno run --allow-read=./words.txt
 import getWords from "./lib/get_words.ts";
+import selectRandomly from "./lib/select_randomly.ts";
 import Questioner, { EstimatedResult } from "./lib/questioner.ts";
 import Assistant from "./lib/assistant.ts";
 import * as Color from "./lib/color.ts";
@@ -9,7 +10,8 @@ const words = await getWords();
 startGame(words);
 
 function startGame(words: readonly string[]) {
-  const questioner = new Questioner(words);
+  const answer = selectRandomly(words);
+  const questioner = new Questioner(words, answer);
   const assistant = new Assistant();
 
   let turn = 0;

@@ -19,10 +19,10 @@ type JudgeResult =
   };
 
 export default class Questioner {
-  public readonly answer: string;
-  constructor(private readonly words: readonly string[]) {
-    this.answer = selectRandomly(words);
-  }
+  constructor(
+    private readonly words: readonly string[],
+    private readonly answer: string,
+  ) {}
 
   public judge(input: string | undefined): JudgeResult {
     if (!input) {
@@ -57,8 +57,4 @@ export default class Questioner {
 
 function isSolved(estimatedResult: EstimatedResult[]): boolean {
   return estimatedResult.every(({ exact }) => exact);
-}
-
-function selectRandomly<T>(list: readonly T[]): T {
-  return list[Math.floor(list.length * Math.random())];
 }

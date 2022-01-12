@@ -1,11 +1,13 @@
 #!/usr/bin/env -S deno run --allow-read=./words.txt
 import getWords from "./lib/get_words.ts";
+import selectRandomly from "./lib/select_randomly.ts";
 import Solver from "./lib/solver.ts";
 import Questioner from "./lib/questioner.ts";
+import Logger from "./lib/logger.ts";
 
 const trialNum = /\d+/.test(Deno.args[0]) ? Number(Deno.args[0]) : 10;
 
-console.info(`Try ${trialNum}!`);
+Logger.info(`Try ${trialNum}!`);
 
 const words = await getWords();
 
@@ -16,15 +18,16 @@ const turns = range(trialNum).map(() => {
 }).sort((a, b) => a > b ? 1 : -1);
 
 // Results
-console.info("min:", min(turns));
-console.info("max:", max(turns));
-console.info("mean:", mean(turns));
-console.info("median:", median(turns));
+Logger.info("min:", min(turns));
+Logger.info("max:", max(turns));
+Logger.info("mean:", mean(turns));
+Logger.info("median:", median(turns));
 
 /////////////////
 
 function startGame(words: readonly string[], solver: Solver) {
-  const questioner = new Questioner(words);
+  const answer = selectRandomly(words);
+  const questioner = new Questioner(words, answer);
 
   let turn = 0;
 
@@ -40,7 +43,7 @@ function startGame(words: readonly string[], solver: Solver) {
     }
 
     if (result.type === "solved") {
-      console.info("congrats!! turn:", turn);
+      Logger.info("congrats!! turn:", turn);
       return turn;
     }
   }

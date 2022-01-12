@@ -1,3 +1,4 @@
+import Logger from "./logger.ts";
 import { EstimatedResult } from "./questioner.ts";
 
 export default class Solver {
@@ -7,6 +8,7 @@ export default class Solver {
   public response() {
     // const [head, ...tail] = this.words;
     const candidates = this.words.filter(this.createFilter());
+    Logger.debug("candidates:", candidates.length);
     const [head, ...tail] = candidates;
     this.words = tail;
     return head;
@@ -16,6 +18,10 @@ export default class Solver {
   }
 
   private createFilter() {
+    if (this.history.length === 0) {
+      return () => true;
+    }
+
     const notContainingChars = this.history.flat().reduce(
       (acc, { containing, char }) => {
         if (containing) return acc;
@@ -24,29 +30,34 @@ export default class Solver {
       },
       "",
     );
-    const containingChars = this.history.flat().reduce(
-      (acc, { containing, char }) => {
-        if (!containing) return acc;
-        if (acc.includes(char)) return acc;
-        return [...acc, char];
-      },
-      [] as string[],
-    );
+    const containingRegex = this.history.flat()
+      .reduce(
+        (acc, { containing, char }) => {
+          if (!containing) return acc;
+          if (acc.includes(char)) return acc;
+          return [...acc, char];
+        },
+        [] as string[],
+      ).reduce(
+        (acc, char) => {
+          return acc + `(?=.*${char})`;
+        },
+        "",
+      );
 
-    const exactRegExp = new RegExp(
-      range(5).map((i) => {
-        for (const result of this.history) {
-          if (result[i].exact) {
-            return result[i].char;
-          }
-          return `[^${notContainingChars}]`;
+    const exactRegex = range(5).map((i) => {
+      for (const result of this.history) {
+        if (result[i].exact) {
+          return result[i].char;
         }
-      }).join(""),
-    );
+        return `[^${notContainingChars}]`;
+      }
+    }).join("");
+
+    const regex = new RegExp(`${containingRegex}(${exactRegex})`);
 
     return function filter(word: string): boolean {
-      return containingChars.every((char) => word.includes(char)) &&
-        exactRegExp.test(word);
+      return regex.test(word);
     };
   }
 }
