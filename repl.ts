@@ -1,8 +1,7 @@
-#!/usr/bin/env -S deno run --allow-read=./words.txt
-import getWords from "./lib/get_words.ts";
 import Solver from "./lib/solver.ts";
+import _words from "./words.json" assert { type: "json" };
 
-const words = await getWords();
+const words = Object.freeze(_words.map((w) => w.toLowerCase()));
 
 startGame(words);
 
