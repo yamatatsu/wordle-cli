@@ -1,3 +1,4 @@
+import { readLines } from "https://deno.land/std/io/mod.ts";
 import Solver from "./lib/solver.ts";
 import _words from "./words.json" assert { type: "json" };
 
@@ -10,8 +11,8 @@ async function startGame(words: readonly string[]) {
   let word = await solver.response();
   console.log(word);
 
-  while (true) {
-    const response = prompt()?.toLowerCase().trim().split(",");
+  for await (const line of readLines(Deno.stdin)) {
+    const response = line.toLowerCase().trim().split(",");
     if (!response) {
       continue;
     }
