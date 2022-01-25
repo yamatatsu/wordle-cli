@@ -1,8 +1,8 @@
 import { readLines } from "https://deno.land/std/io/mod.ts";
 import Solver from "./lib/solver.ts";
-import _words from "./words.json" assert { type: "json" };
+import getWords from "./lib/get_words.ts";
 
-const words = Object.freeze(_words.map((w) => w.toLowerCase()));
+const words = await getWords();
 
 startGame(words);
 
