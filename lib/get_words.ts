@@ -1,5 +1,5 @@
-export default async function getWords(): Promise<readonly string[]> {
-  const file = await Deno.readTextFile("./words.txt");
-  const words = file.toLowerCase().split("\n");
-  return Object.freeze(words);
+import words from "../words.json" assert { type: "json" };
+
+export default function getWords(): readonly string[] {
+  return Object.freeze(words.map((w) => w.toLowerCase()));
 }
